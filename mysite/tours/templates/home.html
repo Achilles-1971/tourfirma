@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Tour Firma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            font-size: 3em;
+            color: #2a9d8f;
+            margin-top: 50px;
+        }
+        .links {
+            margin-top: 30px;
+        }
+        .links a {
+            display: inline-block;
+            background-color: #264653;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .links a:hover {
+            background-color: #2a9d8f;
+        }
+    </style>
+</head>
+<body>
+    <h1>WELCOME TO TOUR FIRMA</h1>
+    
+    <div class="links">
+        <a href="{% url 'home' %}">Available Tours</a>
+        <a href="{% url 'order_tour' 1 %}">Active Orders</a>  <!-- Тут пока временная ссылка -->
+    </div>
+</body>
+</html>

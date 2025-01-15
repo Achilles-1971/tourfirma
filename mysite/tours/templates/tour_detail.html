@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tour.name }} - Tour Firma</title>
+</head>
+<body>
+    <h1>{{ tour.name }}</h1>
+    <p>{{ tour.description }}</p>
+    <p>Price: ${{ tour.price }}</p>
+    <p>Start Date: {{ tour.start_date }}</p>
+    <p>End Date: {{ tour.end_date }}</p>
+    <a href="{% url 'order_tour' tour.id %}">Order this tour</a>
+</body>
+</html>
