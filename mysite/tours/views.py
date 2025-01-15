@@ -1,21 +1,30 @@
-from django.shortcuts import render, redirect,  get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Order, Tour
+from django.shortcuts import render, get_object_or_404
+from .models import Tour, Order  # Импортируем модели
 
 def home(request):
-    tours = Tour.objects.all()  # Получаем все туры из базы данных
-    return render(request, 'home.html', {'tours': tours})
+    return render(request, 'home.html')
 
+# Список доступных туров
+def tour_list(request):
+    tours = Tour.objects.all()
+    return render(request, 'tour_list.html', {'tours': tours})
+
+# Детальная информация о туре
 def tour_detail(request, tour_id):
-    tour = get_object_or_404(Tour, pk=tour_id)  # Получаем тур по ID
+    tour = get_object_or_404(Tour, id=tour_id)
     return render(request, 'tour_detail.html', {'tour': tour})
 
-@login_required
+# Список активных заказов
+def order_list(request):
+    orders = Order.objects.all()
+    return render(request, 'order_list.html', {'orders': orders})
+
+# Оформление заказа
 def order_tour(request, tour_id):
-    tour = get_object_or_404(Tour, pk=tour_id)
-    if request.method == 'POST':
-        order = Order(user=request.user, tour=tour)
-        order.save()  # Сохраняем заказ в базе данных
-        return redirect('order_success')  # Перенаправляем на страницу с подтверждением
+    tour = get_object_or_404(Tour, id=tour_id)
+
+    if request.method == "POST":
+        # Здесь можно добавить сохранение заказа
+        return render(request, 'order_success.html', {'tour': tour})
 
     return render(request, 'order_tour.html', {'tour': tour})

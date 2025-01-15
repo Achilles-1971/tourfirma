@@ -1,46 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Tour Firma</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        h1 {
-            font-size: 3em;
-            color: #2a9d8f;
-            margin-top: 50px;
-        }
-        .links {
-            margin-top: 30px;
-        }
-        .links a {
-            display: inline-block;
-            background-color: #264653;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            font-size: 1.2em;
-            margin: 10px;
-            border-radius: 5px;
-        }
-        .links a:hover {
-            background-color: #2a9d8f;
-        }
-    </style>
+    <title>Главная</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>WELCOME TO TOUR FIRMA</h1>
-    
-    <div class="links">
-        <a href="{% url 'home' %}">Available Tours</a>
-        <a href="{% url 'order_tour' 1 %}">Active Orders</a>  <!-- Тут пока временная ссылка -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Туроператор</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tour_list' %}">Доступные туры</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% url 'order_list' %}">Активные заказы</a>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный контент -->
+    <div class="container text-center mt-5">
+        <h1 class="display-3 fw-bold">Добро пожаловать в наш Туроператор!</h1>
+        <p class="lead">Откройте для себя лучшие туры по всему миру.</p>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
