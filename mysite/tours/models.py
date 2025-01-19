@@ -13,10 +13,16 @@ class Tour(models.Model):
 
 
 class Order(models.Model):
-    tour = models.ForeignKey('Tour', on_delete=models.CASCADE)
+    STATUS_CHOICES = [
+        ('active', 'Активный'),
+        ('completed', 'Завершенный'),
+        ('canceled', 'Отмененный'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order_date = models.DateTimeField(auto_now_add=True)  
-    is_active = models.BooleanField(default=True)
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    order_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
 
     def __str__(self):
-        return f"Заказ {self.id} - {self.tour.name}"
+        return f"{self.user} - {self.tour} ({self.status})"

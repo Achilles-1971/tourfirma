@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import home, tour_list, tour_detail, order_list, order_tour
+from . import views
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('tours/', tour_list, name='tour_list'),
-    path('tours/<int:tour_id>/', tour_detail, name='tour_detail'),
-    path('orders/', order_list, name='order_list'),
-    path('orders/<int:tour_id>/', order_tour, name='order_tour'),
-    
+    path("", views.home, name="home"),
+    path("orders/", views.order_list, name="order_list"),
+    path("orders/cancel/<int:order_id>/", views.cancel_order, name="cancel_order"),  # Добавьте этот маршрут
+    path("tours/", views.tour_list, name="tour_list"),
+    path("tours/<int:tour_id>/", views.tour_detail, name="tour_detail"),
+    path("tours/order/<int:tour_id>/", views.order_tour, name="order_tour"),
+    path("orders/restore/<int:order_id>/", views.restore_order, name="restore_order"),
+
 ]

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
+    <title>Главная - Туроператор</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
 
+    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">Туроператор</a>
@@ -27,11 +28,73 @@
         </div>
     </nav>
 
-    <!-- Главный контент -->
-    <div class="container text-center mt-5">
-        <h1 class="display-3 fw-bold">Добро пожаловать в наш Туроператор!</h1>
-        <p class="lead">Откройте для себя лучшие туры по всему миру.</p>
-    </div>
+    <!-- Главный баннер -->
+    <header class="bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Добро пожаловать в наш Туроператор!</h1>
+            <p class="lead">Откройте для себя лучшие туры по всему миру.</p>
+            <a href="{% url 'tour_list' %}" class="btn btn-light btn-lg">Посмотреть туры</a>
+        </div>
+    </header>
+
+    <!-- О нас -->
+    <section class="container my-5">
+        <h2 class="text-center fw-bold">О нас</h2>
+        <p class="text-center">Мы — ведущий туроператор с многолетним опытом, предлагающий уникальные путешествия и незабываемые впечатления.</p>
+        <div class="row mt-4">
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/150" alt="Опыт" class="rounded-circle mb-3">
+                <h4>Опыт</h4>
+                <p>Более 10 лет опыта в организации туров.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/150" alt="Удобство" class="rounded-circle mb-3">
+                <h4>Удобство</h4>
+                <p>Легкое бронирование онлайн.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/150" alt="Поддержка" class="rounded-circle mb-3">
+                <h4>Поддержка</h4>
+                <p>Круглосуточная поддержка клиентов.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы клиентов -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold">Отзывы наших клиентов</h2>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <blockquote class="blockquote">
+                        <p>Невероятные туры и отличный сервис. Спасибо за незабываемый отпуск!</p>
+                        <footer class="blockquote-footer">Мария Иванова</footer>
+                    </blockquote>
+                </div>
+                <div class="col-md-4">
+                    <blockquote class="blockquote">
+                        <p>Дружелюбный персонал и удобное бронирование. Всем рекомендую!</p>
+                        <footer class="blockquote-footer">Иван Петров</footer>
+                    </blockquote>
+                </div>
+                <div class="col-md-4">
+                    <blockquote class="blockquote">
+                        <p>Я уже дважды путешествовал с этим туроператором. Всегда на высоте!</p>
+                        <footer class="blockquote-footer">Ольга Смирнова</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">Свяжитесь с нами:</p>
+            <p>Email: info@touroperator.com | Телефон: +7 123 456 78 90</p>
+            <p>&copy; 2025 Туроператор. Все права защищены.</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
