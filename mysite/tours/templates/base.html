@@ -1,24 +1,37 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заказ подтверждён</title>
+    <title>{% block title %}Туроператор{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/animations.css' %}">
     <style>
-        .done {
-            display: block;
-            margin: 20px auto;
-            max-width: 100%;
-            height: auto;
-            width: 300px; 
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .navbar img {
+            height: 50px;
+            margin-left: 15px;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            margin-right: 15px;
+        }
+
+        .navbar-toggler {
+            border: none;
         }
     </style>
 </head>
-<body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -30,7 +43,7 @@
                     </li>
                 </ul>
                 <a class="navbar-brand d-flex align-items-center mx-auto" href="{% url 'home' %}">
-                    <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px;">
+                    <img src="{% static 'images/logo.png' %}" alt="Логотип">
                 </a>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -41,20 +54,10 @@
         </div>
     </nav>
 
-    <div class="container text-center">
-        <img src="{% static 'images/done.png' %}" alt="Успешно подтверждено" class="done">
-        <h1>Заказ подтверждён!</h1>
-        <p>Спасибо за ваш заказ! 🎉</p>
-
-        {% if tour %}
-            <p><strong>Тур:</strong> {{ tour.name }}</p>
-            <p><strong>Дата:</strong> {{ tour.date }}</p>
-            <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
-        {% endif %}
-
-        <a href="{% url 'home' %}" class="btn btn-primary">Вернуться на главную</a>
-    </div>
+    {% block content %}
+    {% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

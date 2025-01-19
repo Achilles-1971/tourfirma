@@ -1,0 +1,17 @@
+.animated-text {
+    opacity: 0;
+    transform: translateY(50px);
+    animation: slide-up 1s ease-out forwards;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

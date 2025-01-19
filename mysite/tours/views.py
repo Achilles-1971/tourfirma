@@ -2,16 +2,19 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Tour, Order
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core.paginator import Paginator
+from .models import News
 
 
 def home(request):
-    return render(request, "home.html")
+    news = News.objects.all().order_by("-created_at")[:3]
+    return render(request, "home.html", {"news": news})
+
 
 
 def order_list(request):
     status_filter = request.GET.get("status")
     sort_by = request.GET.get("sort")
-
     orders = Order.objects.filter(user=request.user)
 
     if status_filter:
@@ -27,9 +30,11 @@ def order_list(request):
         elif sort_by == "price_desc":
             orders = orders.order_by("-tour__price")
 
-    return render(request, "order_list.html", {"orders": orders})
+    paginator = Paginator(orders, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
-
+    return render(request, "order_list.html", {"page_obj": page_obj})
 
 
 def tour_list(request):
@@ -50,18 +55,30 @@ def order_tour(request, tour_id):
         return render(request, "order_success.html", {"tour": tour})
     return render(request, "order_tour.html", {"tour": tour})
 
+
 @login_required
 def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    if order.status == 'active':  # Только активные заказы можно отменить
-        order.status = 'canceled'
+    if order.status == "active":
+        order.status = "canceled"
         order.save()
-    return redirect('order_list')
+    return redirect("order_list")
+
 
 @login_required
 def restore_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    if order.status == 'canceled':  # Только отменённые заказы можно восстановить
-        order.status = 'active'
+    if order.status == "canceled":
+        order.status = "active"
         order.save()
-    return redirect('order_list')
+    return redirect("order_list")
+
+
+def news_list(request):
+    news = News.objects.all().order_by("-created_at")
+    return render(request, "news_list.html", {"news": news})
+
+
+def news_detail(request, news_id):
+    news = get_object_or_404(News, id=news_id)
+    return render(request, "news_details.html", {"news": news})
