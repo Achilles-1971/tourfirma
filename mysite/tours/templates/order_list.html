@@ -27,14 +27,23 @@
         </div>
     </nav>
 
-    <!-- Контент заказов -->
     <div class="container mt-5">
         <h1>Активные заказы</h1>
+
+        <form method="get" class="mb-3">
+            <label for="status" class="form-label">Фильтр по статусу:</label>
+            <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                <option value="">Все</option>
+                <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>Активные</option>
+                <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Завершённые</option>
+            </select>
+        </form>
+
         <ul class="list-group">
             {% for order in orders %}
                 <li class="list-group-item">
                     <strong>{{ order.tour.name }}</strong> - ${{ order.tour.price }}
-                    <span class="text-muted">(Заказан: {{ order.date_ordered }})</span>
+                    <span class="text-muted">(Заказан: {{ order.order_date }})</span>
                 </li>
             {% empty %}
                 <li class="list-group-item">Нет активных заказов.</li>
