@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -5,82 +6,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Активные заказы - Tour Firma</title>
+
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4a90e2 0%, #002f6c 100%);
+            color: #fff;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+        }
+
+
+        .filter-card {
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 1.5rem;
+            background-color: #fff;
+        }
+        .filter-card label {
+            font-weight: 500;
+        }
+
+
+        .list-group {
+            border: none;
+        }
+        .list-group-item {
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .list-group-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .badge.bg-secondary {
+            font-size: 0.9rem;
+        }
+
+
+        .pagination .page-link {
+            border-radius: 20px;
+            margin: 0 3px;
+        }
+        .page-item.disabled .page-link {
+            color: #888;
+        }
+    </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px; width: auto;">
+                <span class="ms-2">Туроператор</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tour_list' %}">Доступные туры</a>
-                    </li>
-                </ul>
-                <a class="navbar-brand d-flex align-items-center mx-auto" href="{% url 'home' %}">
-                    <img src="/static/images/logo.png" alt="Логотип" style="height: 50px;">
-                </a>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_list' %}">Активные заказы</a>
+                        <a class="nav-link" href="{% url 'tour_list' %}">Туры</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'order_list' %}">Заказы</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
+    <div class="hero">
         <h1>Активные заказы</h1>
-    
-        <form method="get" class="mb-3">
-            <label for="status" class="form-label">Фильтр по статусу:</label>
-            <select name="status" id="status" class="form-select" onchange="this.form.submit()">
-                <option value="">Все</option>
-                <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>Активные</option>
-                <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Завершённые</option>
-                <option value="canceled" {% if request.GET.status == "canceled" %}selected{% endif %}>Отменённые</option>
-            </select>
-    
-            <label for="sort" class="form-label">Сортировать по:</label>
-            <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
-                <option value="">По умолчанию</option>
-                <option value="date_asc" {% if request.GET.sort == "date_asc" %}selected{% endif %}>Дата (по возрастанию)</option>
-                <option value="date_desc" {% if request.GET.sort == "date_desc" %}selected{% endif %}>Дата (по убыванию)</option>
-                <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Цена (по возрастанию)</option>
-                <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Цена (по убыванию)</option>
-            </select>
-        </form>
-    
-        <ul class="list-group">
+        <p>Управляйте своими заказами и контролируйте процесс</p>
+    </div>
+
+
+    <div class="container">
+        
+
+        <div class="filter-card">
+            <form method="get" class="row g-3">
+
+                <div class="col-md-6">
+                    <label for="status" class="form-label">Фильтр по статусу:</label>
+                    <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">Все</option>
+                        <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>Активные</option>
+                        <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Завершённые</option>
+                        <option value="canceled" {% if request.GET.status == "canceled" %}selected{% endif %}>Отменённые</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="sort" class="form-label">Сортировать по:</label>
+                    <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+                        <option value="">По умолчанию</option>
+                        <option value="date_asc" {% if request.GET.sort == "date_asc" %}selected{% endif %}>Дата (по возрастанию)</option>
+                        <option value="date_desc" {% if request.GET.sort == "date_desc" %}selected{% endif %}>Дата (по убыванию)</option>
+                        <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Цена (по возрастанию)</option>
+                        <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Цена (по убыванию)</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+  
+        <ul class="list-group mb-4">
             {% for order in page_obj %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <strong>{{ order.tour.name }}</strong> - ${{ order.tour.price }}
+                    <strong>{{ order.tour.name }}</strong> – ${{ order.tour.price }}
                     <span class="text-muted">(Заказан: {{ order.order_date }})</span>
                     <span class="badge bg-secondary">{{ order.get_status_display }}</span>
                 </div>
-                {% if order.status == "active" %}
-                <form method="post" action="{% url 'cancel_order' order.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Отменить</button>
-                </form>
-                {% elif order.status == "canceled" %}
-                <form method="post" action="{% url 'restore_order' order.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success btn-sm">Восстановить</button>
-                </form>
-                {% endif %}
+                <div>
+                    {% if order.status == "active" %}
+                    <form method="post" action="{% url 'cancel_order' order.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Отменить
+                        </button>
+                    </form>
+                    {% elif order.status == "canceled" %}
+                    <form method="post" action="{% url 'restore_order' order.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Восстановить
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
             </li>
             {% empty %}
-            <li class="list-group-item">Нет заказов с выбранным статусом и сортировкой.</li>
+            <li class="list-group-item">
+                Нет заказов с выбранным статусом и сортировкой.
+            </li>
             {% endfor %}
         </ul>
-    
-        <nav class="mt-4">
+
+        <nav>
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
@@ -92,7 +182,9 @@
                 {% endif %}
     
                 <li class="page-item disabled">
-                    <span class="page-link">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+                    <span class="page-link">
+                        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                    </span>
                 </li>
     
                 {% if page_obj.has_next %}
@@ -100,13 +192,14 @@
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                        Последняя &raquo;
+                    </a>
                 </li>
                 {% endif %}
             </ul>
         </nav>
     </div>
-    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

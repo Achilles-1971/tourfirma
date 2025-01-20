@@ -12,29 +12,29 @@
             margin: 20px auto;
             max-width: 100%;
             height: auto;
-            width: 300px; 
+            width: 300px;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px; width: auto;">
+                <span class="ms-2">Туроператор</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tour_list' %}">Доступные туры</a>
-                    </li>
-                </ul>
-                <a class="navbar-brand d-flex align-items-center mx-auto" href="{% url 'home' %}">
-                    <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px;">
-                </a>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_list' %}">Активные заказы</a>
+                        <a class="nav-link" href="{% url 'tour_list' %}">Туры</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'order_list' %}">Заказы</a>
                     </li>
                 </ul>
             </div>
