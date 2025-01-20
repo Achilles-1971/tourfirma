@@ -37,9 +37,38 @@ def order_list(request):
     return render(request, "order_list.html", {"page_obj": page_obj})
 
 
+from django.shortcuts import render
+from .models import Tour
+
+
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Tour
+
+
 def tour_list(request):
+    price_min = request.GET.get("price_min")
+    price_max = request.GET.get("price_max")
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+
     tours = Tour.objects.all()
-    return render(request, "tour_list.html", {"tours": tours})
+
+    if price_min:
+        tours = tours.filter(price__gte=price_min)
+    if price_max:
+        tours = tours.filter(price__lte=price_max)
+    if start_date:
+        tours = tours.filter(start_date__gte=start_date)
+    if end_date:
+        tours = tours.filter(end_date__lte=end_date)
+
+    paginator = Paginator(tours, 6)  
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "tour_list.html", {"page_obj": page_obj})
 
 
 def tour_detail(request, tour_id):

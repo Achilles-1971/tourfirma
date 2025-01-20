@@ -7,10 +7,16 @@ class Tour(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
-    gif = models.ImageField(upload_to='tours_gifs/', blank=True, null=True) 
+    gif = models.ImageField(upload_to='tours_gifs/', blank=True, null=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    image = models.ImageField(upload_to='tour_images/', blank=True, null=True)  # Поле для фото
 
     def __str__(self):
         return self.name
+
+
+
 
 class Order(models.Model):
     STATUS_CHOICES = [
