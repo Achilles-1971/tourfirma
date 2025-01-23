@@ -6,83 +6,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ tour.name }} - Туроператор</title>
     
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Animate.css (опционально для анимаций) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
     <style>
         body {
             font-family: Arial, sans-serif;
         }
 
+        /* ---------------------------
+           Hero Section
+        --------------------------- */
         .hero-section {
             position: relative;
-            text-align: center;
-            color: #fff; 
-            overflow: hidden; 
+            width: 100%;
+            height: 100vh; /* Полноэкранный Hero-блок */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
         }
-
-        .hero-section::before {
-            content: "";
+        .hero-video, .hero-image {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
-            z-index: 1; 
-        }
-
-        .hero-section img {
-            width: 100%;
+            top: 50%; left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
             height: auto;
-            max-height: 450px; 
+            z-index: 1;
+            transform: translate(-50%, -50%);
             object-fit: cover;
         }
-
-        .hero-text {
+        .hero-overlay {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2; 
-            background-color: rgba(0, 0, 0, 0.6); 
-            padding: 20px 30px;
-            border-radius: 8px;
-            max-width: 600px;
-            width: 90%; 
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            z-index: 2;
         }
-
+        .hero-text {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
         .hero-text h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: slideInDown 1s ease-in-out;
         }
         .hero-text p {
-            margin-bottom: 0;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            animation: slideInUp 1s ease-in-out;
         }
-
         .btn-primary.btn-lg {
             padding: 0.75rem 2rem;
             font-size: 1.1rem;
-            border-radius: 25px; 
-            transition: background-color 0.3s ease;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .btn-primary.btn-lg:hover {
-            background-color: #0056b3;
+            background-color: #004085;
+            transform: translateY(-5px);
         }
 
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ---------------------------
+           Описание тура
+        --------------------------- */
+        .description-section {
+            background-color: #f8f9fa;
+            padding: 40px 20px;
+            border-radius: 8px;
+        }
         .description {
             font-size: 1.2rem;
             line-height: 1.6;
             color: #555;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
-        .info-row {
-            margin-top: 2rem; 
-            font-size: 1.05rem;
+        /* ---------------------------
+           Программа тура — шаги
+        --------------------------- */
+        .steps-container {
+            margin-top: 60px;
+            margin-bottom: 30px;
         }
-        .info-row p strong {
-            color: #333;
+        .steps-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .step-item:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 60px;
+            height: 4px;
+            background-color: #e9ecef;
+            transform: translateY(-50%);
+        }
+        .step-circle {
+            width: 40px; height: 40px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .step-item:hover .step-circle {
+            background-color: #dee2e6;
+        }
+        .step-title {
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-align: center;
+            width: 80px;
+        }
+        .step-circle.active {
+            background-color: #0056b3;
+            color: #fff;
         }
 
+        /* ---------------------------
+           Аккордеон
+        --------------------------- */
         .accordion-button {
             font-weight: bold;
             color: #0056b3;
@@ -96,10 +184,14 @@
             object-fit: cover;
             border-radius: 8px;
         }
+
+        /* Отступы внизу */
+        .mb-5 { margin-bottom: 3rem !important; }
     </style>
 </head>
 <body>
     
+    <!-- Навбар -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
@@ -122,70 +214,182 @@
             </div>
         </div>
     </nav>
- 
+    <!-- /Навбар -->
+
+    <!-- Hero Section -->
     <div class="hero-section">
-        {% if tour.gif %}
-            <img src="{{ tour.gif.url }}" alt="Гифка для {{ tour.name }}">
+        {% if tour.video %}
+            <video autoplay muted loop class="hero-video">
+                <source src="{{ tour.video.url }}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        {% elif tour.gif %}
+            <img src="{{ tour.gif.url }}" alt="Гифка для {{ tour.name }}" class="hero-image">
         {% else %}
-            <img src="{% static 'images/default.gif' %}" alt="Гифка по умолчанию">
+            <img src="{% static 'images/default.gif' %}" alt="Гифка по умолчанию" class="hero-image">
         {% endif %}
+        <div class="hero-overlay"></div>
         <div class="hero-text">
-            <h1>{{ tour.name }}</h1>
-            <p>Откройте для себя удивительные приключения и незабываемые впечатления.</p>
+            <h1 class="animate__animated animate__fadeInDown">{{ tour.name }}</h1>
+            <p class="animate__animated animate__fadeInUp">Откройте для себя удивительные приключения и незабываемые впечатления.</p>
+            <a href="{% url 'order_tour' tour.id %}" class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp">Заказать тур</a>
         </div>
     </div>
+    <!-- /Hero Section -->
 
     <div class="container mt-5">
-        <div class="text-center mb-4">
-            <a href="{% url 'order_tour' tour.id %}" class="btn btn-primary btn-lg">
-                Заказать этот тур
-            </a>
+        <!-- Описание тура -->
+        <div class="description-section mb-5">
+            <h2 class="text-center mb-3">Описание тура</h2>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10">
+                    <p class="description">
+                        {{ tour.description|linebreaks }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="row text-center mt-4">
+                <div class="col-md-6 mb-3">
+                    <p><strong>Цена:</strong> ${{ tour.price }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p><strong>Даты тура:</strong> {{ tour.start_date }} - {{ tour.end_date }}</p>
+                </div>
+            </div>
         </div>
 
-        <h2 class="text-center mb-3">Описание тура</h2>
-        <p class="description text-center mx-auto" style="max-width: 800px;">
-            {{ tour.description }}
-        </p>
-
-        <div class="row info-row text-center">
-            <div class="col-md-6 mb-3">
-                <p><strong>Цена:</strong> ${{ tour.price }}</p>
-            </div>
-            <div class="col-md-6 mb-3">
-                <p><strong>Даты тура:</strong> {{ tour.start_date }} - {{ tour.end_date }}</p>
+        <div class="steps-container">
+            <div class="steps-title">Программа Тура</div>
+            <div class="progress-steps">
+                {% for day in tour.days.all %}
+                <div class="step-item" data-target="#collapse{{ day.day_number }}">
+                    <div class="step-circle{% if forloop.first %} active{% endif %}">
+                        {{ day.day_number }}
+                    </div>
+                    <div class="step-title">{{ day.title }}</div>
+                </div>
+                {% endfor %}
             </div>
         </div>
 
-        <h3 class="text-center mt-5 mb-4">Программа тура</h3>
-        <div class="accordion" id="tourDaysAccordion">
+        <div class="accordion mb-5" id="tourDaysAccordion">
             {% for day in tour.days.all %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="heading{{ day.day_number }}">
-                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ day.day_number }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ day.day_number }}">
+                    <button 
+                        class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapse{{ day.day_number }}" 
+                        aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" 
+                        aria-controls="collapse{{ day.day_number }}"
+                    >
                         День {{ day.day_number }}: {{ day.title }}
                     </button>
                 </h2>
-                <div id="collapse{{ day.day_number }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ day.day_number }}" data-bs-parent="#tourDaysAccordion">
+                <div 
+                    id="collapse{{ day.day_number }}" 
+                    class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" 
+                    aria-labelledby="heading{{ day.day_number }}" 
+                    data-bs-parent="#tourDaysAccordion"
+                >
                     <div class="accordion-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <!-- Левая колонка: Основное фото / мини-карусель -->
+                            <div class="col-md-6 mb-4">
+                                <h5 class="fw-bold mb-2">Фотографии</h5>
+                                
+                                <!-- Основное изображение дня (field day.image) -->
                                 {% if day.image %}
-                                <img src="{{ day.image.url }}" alt="{{ day.title }}" class="img-fluid rounded shadow">
+                                    <img src="{{ day.image.url }}" alt="{{ day.title }}" class="img-fluid rounded shadow mb-3">
                                 {% else %}
-                                <img src="{% static 'images/default-day.jpg' %}" alt="Нет изображения" class="img-fluid rounded shadow">
+                                    <img src="{% static 'images/default-day.jpg' %}" alt="Нет изображения" class="img-fluid rounded shadow mb-3">
+                                {% endif %}
+                                
+                                <!-- Мини-карусель (динамическая) -->
+                                {% if day.images.all %}
+                                    <div id="carouselDay{{ day.day_number }}" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            {% for image in day.images.all %}
+                                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption }}">
+                                                    {% if image.caption %}
+                                                        <div class="carousel-caption d-none d-md-block">
+                                                            <p>{{ image.caption }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% if day.images.all|length > 1 %}
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselDay{{ day.day_number }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselDay{{ day.day_number }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            </button>
+                                        {% endif %}
+                                    </div>
                                 {% endif %}
                             </div>
-                            <div class="col-md-8">
+                            
+                            <!-- Правая колонка: Описание дня + Ключевые моменты -->
+                            <div class="col-md-6">
+                                <h5 class="fw-bold mb-2">Описание дня</h5>
                                 <p>{{ day.description }}</p>
+                                
+                                <h6 class="fw-bold mb-2 mt-4">Ключевые моменты</h6>
+                                <ul class="list-unstyled">
+                                    {% for point in day.key_points.all %}
+                                        <li class="mb-2">
+                                            <i class="bi {{ point.icon }} me-2"></i>
+                                            {{ point.text }}
+                                        </li>
+                                    {% empty %}
+                                        <li class="text-muted">Нет ключевых моментов.</li>
+                                    {% endfor %}
+                                </ul>
                             </div>
-                        </div>
+                        </div><!-- /row -->
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        
+        <!-- /Аккордеон -->
 
+    </div> <!-- /container -->
+
+    <!-- Bootstrap JS (содержит Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Скрипт: клик по «шагу» -> открыть нужный день в аккордеоне -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var stepItems = document.querySelectorAll('.step-item');
+      
+      stepItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+          var target = this.getAttribute('data-target');
+          if (!target) return;
+
+          var collapseEl = document.querySelector(target);
+          if (!collapseEl) return;
+
+          var bsCollapse = new bootstrap.Collapse(collapseEl, {
+            toggle: true
+          });
+          collapseEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Убираем класс .active со всех кружков и добавляем на текущий
+          stepItems.forEach(function(si) {
+            si.querySelector('.step-circle').classList.remove('active');
+          });
+          this.querySelector('.step-circle').classList.add('active');
+        });
+      });
+    });
+    </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
 from .models import News
+from .models import Comment
 
 
 def home(request):
@@ -108,3 +109,16 @@ def news_list(request):
 def news_detail(request, news_id):
     news = get_object_or_404(News, id=news_id)
     return render(request, "news_details.html", {"news": news})
+
+@login_required
+def add_comment(request, news_id):
+    news = get_object_or_404(News, id=news_id)
+    if request.method == "POST":
+        comment_text = request.POST.get("comment")
+        if comment_text:
+            Comment.objects.create(
+                user=request.user,
+                news=news,
+                text=comment_text
+            )
+    return redirect('news_detail', news_id=news.id)

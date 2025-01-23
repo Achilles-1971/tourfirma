@@ -55,3 +55,36 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+    
+class KeyPoint(models.Model):
+    day = models.ForeignKey(
+        TourDay,
+        on_delete=models.CASCADE,
+        related_name='key_points'
+    )
+    text = models.CharField(max_length=255, verbose_name="Текст ключевого момента")
+
+    ICON_CHOICES = [
+        ('bi-geo-alt-fill', 'Геолокация'),
+        ('bi-calendar-check-fill', 'Календарь'),
+        ('bi-star-fill', 'Звезда'),
+        ('bi-check-circle-fill', 'Галочка'),
+    ]
+    icon = models.CharField(
+        max_length=50,
+        choices=ICON_CHOICES,
+        default='bi-star-fill',
+        verbose_name="Иконка (Bootstrap Icons)"
+    )
+
+    def __str__(self):
+        return f"{self.text[:50]}..."
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    news = models.ForeignKey('News', on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username}: {self.text[:20]}"

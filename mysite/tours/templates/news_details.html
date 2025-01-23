@@ -20,6 +20,7 @@
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
             padding: 100px 20px;
             text-align: center;
+            animation: fadeIn 1.5s ease;
         }
 
         .news-header h1 {
@@ -45,11 +46,12 @@
             color: white;
             text-decoration: none;
             border-radius: 30px;
-            transition: background-color 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
         .btn-back:hover {
             background-color: #0056b3;
+            transform: translateY(-3px);
         }
 
         .footer {
@@ -59,6 +61,20 @@
             margin-top: 40px;
             color: #666;
             border-top: 1px solid #ddd;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -99,6 +115,49 @@
         <div class="news-content">
             <p>{{ news.content }}</p>
         </div>
+
+        <!-- Комментарии -->
+        <div class="mt-5">
+            <h3>Комментарии</h3>
+            <div class="mb-4">
+                {% if user.is_authenticated %}
+                <form action="{% url 'add_comment' news.id %}" method="post">
+                    {% csrf_token %}
+                    <textarea name="comment" class="form-control mb-2" rows="3" placeholder="Оставьте комментарий"></textarea>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+                {% else %}
+                <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+                {% endif %}
+            </div>
+            <div>
+                {% for comment in news.comments.all %}
+                <div class="border p-3 mb-3">
+                    <strong>{{ comment.user.username }}</strong>
+                    <p>{{ comment.text }}</p>
+                    <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Связанные новости -->
+        <h2 class="mt-5">Связанные новости</h2>
+        <div class="row">
+            {% for related_news in news.get_related_news %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{{ related_news.image.url }}" class="card-img-top" alt="{{ related_news.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ related_news.title }}</h5>
+                        <p class="card-text">{{ related_news.description|truncatewords:20 }}</p>
+                        <a href="{% url 'news_detail' related_news.id %}" class="btn btn-primary">Читать</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
         <div class="text-center">
             <a href="{% url 'home' %}" class="btn-back">Вернуться на главную</a>
         </div>
