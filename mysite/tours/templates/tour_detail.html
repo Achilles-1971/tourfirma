@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     
     <style>
-
         body {
             font-family: Arial, sans-serif;
         }
@@ -70,13 +69,11 @@
             background-color: #0056b3;
         }
 
-
         .description {
             font-size: 1.2rem;
             line-height: 1.6;
             color: #555;
         }
-
 
         .info-row {
             margin-top: 2rem; 
@@ -85,10 +82,24 @@
         .info-row p strong {
             color: #333;
         }
+
+        .accordion-button {
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .accordion-button:not(.collapsed) {
+            color: #fff;
+            background-color: #0056b3;
+        }
+        .accordion-body img {
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
-
+    
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
@@ -126,18 +137,15 @@
 
     <div class="container mt-5">
         <div class="text-center mb-4">
-
             <a href="{% url 'order_tour' tour.id %}" class="btn btn-primary btn-lg">
                 Заказать этот тур
             </a>
         </div>
 
-
         <h2 class="text-center mb-3">Описание тура</h2>
         <p class="description text-center mx-auto" style="max-width: 800px;">
             {{ tour.description }}
         </p>
-
 
         <div class="row info-row text-center">
             <div class="col-md-6 mb-3">
@@ -147,7 +155,36 @@
                 <p><strong>Даты тура:</strong> {{ tour.start_date }} - {{ tour.end_date }}</p>
             </div>
         </div>
-    </div>
+
+        <h3 class="text-center mt-5 mb-4">Программа тура</h3>
+        <div class="accordion" id="tourDaysAccordion">
+            {% for day in tour.days.all %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ day.day_number }}">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ day.day_number }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ day.day_number }}">
+                        День {{ day.day_number }}: {{ day.title }}
+                    </button>
+                </h2>
+                <div id="collapse{{ day.day_number }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ day.day_number }}" data-bs-parent="#tourDaysAccordion">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% if day.image %}
+                                <img src="{{ day.image.url }}" alt="{{ day.title }}" class="img-fluid rounded shadow">
+                                {% else %}
+                                <img src="{% static 'images/default-day.jpg' %}" alt="Нет изображения" class="img-fluid rounded shadow">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <p>{{ day.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

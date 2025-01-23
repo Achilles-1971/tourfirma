@@ -10,8 +10,6 @@ def home(request):
     news = News.objects.all().order_by("-created_at")[:3]
     return render(request, "home.html", {"news": news})
 
-
-
 def order_list(request):
     status_filter = request.GET.get("status")
     sort_by = request.GET.get("sort")
@@ -73,8 +71,7 @@ def tour_list(request):
 
 def tour_detail(request, tour_id):
     tour = get_object_or_404(Tour, id=tour_id)
-    return render(request, "tour_detail.html", {"tour": tour})
-
+    return render(request, 'tour_detail.html', {'tour': tour})
 
 @login_required
 def order_tour(request, tour_id):
