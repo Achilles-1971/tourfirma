@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User  
-
+from django.db.models import Q
 from django.db import models
 
 class Tour(models.Model):
@@ -32,29 +32,45 @@ class TourDay(models.Model):
 
 
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ('active', 'Активный'),
-        ('completed', 'Завершенный'),
-        ('canceled', 'Отмененный'),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)  
     order_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
-
-    def __str__(self):
-        return f"{self.user} - {self.tour} ({self.status})"
+    status = models.CharField(
+        max_length=10,
+        choices=[
+            ('active', 'Активный'),
+            ('completed', 'Завершенный'),
+            ('canceled', 'Отмененный'),
+        ],
+        default='active',
+    )
 
 class News(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     content = models.TextField()
-    image = models.ImageField(upload_to="news_images/")
     created_at = models.DateTimeField(auto_now_add=True)
-
+    image = models.ImageField(upload_to='news_images/', blank=True, null=True) 
+    interesting_fact = models.TextField(blank=True, null=True)  
+    important_fact = models.TextField(blank=True, null=True)  
+    source = models.CharField(max_length=255, blank=True, null=True)  
     def __str__(self):
         return self.title
+
+    def get_related_news(self, limit=5):
+        words = self.title.split()
+        query = models.Q()
+        for word in words:
+            query |= models.Q(title__icontains=word)
+        return News.objects.filter(query).exclude(id=self.id).order_by('-created_at')[:limit]
+
+class NewsImage(models.Model):
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name="gallery")
+    image = models.ImageField(upload_to="news_gallery/")
+    caption = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"Фото для {self.news.title}"
     
 class KeyPoint(models.Model):
     day = models.ForeignKey(
@@ -81,10 +97,10 @@ class KeyPoint(models.Model):
         return f"{self.text[:50]}..."
 
 class Comment(models.Model):
+    news = models.ForeignKey(News, related_name='comments', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    news = models.ForeignKey('News', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username}: {self.text[:20]}"
+        return f'Комментарий от {self.user.username} к {self.news.title}'

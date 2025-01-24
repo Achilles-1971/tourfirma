@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,11 +62,15 @@
             font-size: 3rem;
             margin-bottom: 1rem;
             animation: slideInDown 1s ease-in-out;
+            word-wrap: break-word;
+            white-space: normal;
         }
         .hero-text p {
             font-size: 1.5rem;
             margin-bottom: 2rem;
             animation: slideInUp 1s ease-in-out;
+            word-wrap: break-word;
+            white-space: normal;
         }
         .btn-primary.btn-lg {
             padding: 0.75rem 2rem;
@@ -112,38 +117,59 @@
            Программа тура — шаги
         --------------------------- */
         .steps-container {
-            margin-top: 60px;
+            margin-top: 80px; /* Увеличен отступ сверху */
             margin-bottom: 30px;
         }
         .steps-title {
             font-size: 1.5rem;
             font-weight: 600;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem; /* Увеличен отступ снизу */
         }
         .progress-steps {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start; /* Выравнивание по верху, чтобы избежать перекрытия с названиями */
+            position: relative; /* Для позиционирования линий */
+            --progress-percent: 33.333%; /* Установим начальное значение */
+            padding: 40px 0 60px 0; /* Добавлен верхний и нижний отступ для кружков и линии */
+            margin: 0 auto; /* Центрирование контейнера */
+            max-width: 600px; /* Ограничение ширины прогресс-бара */
         }
+        /* Соединяющая линия */
+        .progress-steps::before {
+            content: "";
+            position: absolute;
+            top: 80%; /* Изменено с 50% */
+            left: 0;
+            height: 4px;
+            background-color: #e9ecef;
+            z-index: 0;
+            width: 100%;
+            transform: translateY(-50%);
+        }
+        /* Заполнение линии до активного шага */
+        .progress-steps::after {
+            content: "";
+            position: absolute;
+            top: 80%; /* Изменено с 50% */
+            left: 0;
+            height: 4px;
+            background-color: #0056b3;
+            z-index: 1;
+            width: var(--progress-percent, 0%);
+            transform: translateY(-50%);
+            transition: width 0.3s ease;
+        }
+
         .step-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
             cursor: pointer;
-            margin: 0 10px;
-        }
-        .step-item:not(:last-child)::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 100%;
-            width: 60px;
-            height: 4px;
-            background-color: #e9ecef;
-            transform: translateY(-50%);
+            z-index: 2; /* Чтобы кружки были выше линий */
+            flex: 1; /* Равномерное распределение шагов */
         }
         .step-circle {
             width: 40px; height: 40px;
@@ -151,20 +177,31 @@
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             font-weight: bold;
-            margin-bottom: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .step-item:hover .step-circle {
-            background-color: #dee2e6;
+            margin-bottom: 10px; /* Увеличен отступ между кружком и названием */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            flex-shrink: 0; /* Предотвращает сжатие кружка */
+            word-wrap: break-word;
+            white-space: normal;
+            text-align: center;
         }
         .step-title {
             font-size: 0.85rem;
             color: #6c757d;
             text-align: center;
-            width: 80px;
+            max-width: 120px; /* Увеличено для длинных названий */
+            word-wrap: break-word;
+            white-space: normal;
+            margin-top: 10px; /* Добавлен отступ сверху */
+        }
+        .step-item:hover .step-circle {
+            background-color: #dee2e6;
         }
         .step-circle.active {
             background-color: #0056b3;
+            color: #fff;
+        }
+        .step-circle.completed {
+            background-color: #28a745; /* Зелёный цвет для завершённых шагов */
             color: #fff;
         }
 
@@ -187,6 +224,11 @@
 
         /* Отступы внизу */
         .mb-5 { margin-bottom: 3rem !important; }
+
+        /* Кнопка "Вернуться обратно" */
+        .back-button {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -198,7 +240,8 @@
                 <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px; width: auto;">
                 <span class="ms-2">Туроператор</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -259,12 +302,13 @@
             </div>
         </div>
 
+        <!-- Программа тура — шаги -->
         <div class="steps-container">
             <div class="steps-title">Программа Тура</div>
-            <div class="progress-steps">
+            <div class="progress-steps" id="progressSteps">
                 {% for day in tour.days.all %}
                 <div class="step-item" data-target="#collapse{{ day.day_number }}">
-                    <div class="step-circle{% if forloop.first %} active{% endif %}">
+                    <div class="step-circle{% if forloop.first %} active{% endif %}{% if day.is_completed %} completed{% endif %}">
                         {{ day.day_number }}
                     </div>
                     <div class="step-title">{{ day.title }}</div>
@@ -273,6 +317,7 @@
             </div>
         </div>
 
+        <!-- Аккордеон для дней тура -->
         <div class="accordion mb-5" id="tourDaysAccordion">
             {% for day in tour.days.all %}
             <div class="accordion-item">
@@ -298,7 +343,7 @@
                         <div class="row">
                             <!-- Левая колонка: Основное фото / мини-карусель -->
                             <div class="col-md-6 mb-4">
-                                <h5 class="fw-bold mb-2">Фотографии</h5>
+                                <h5 class="fw-bold mb-2">Фотография</h5>
                                 
                                 <!-- Основное изображение дня (field day.image) -->
                                 {% if day.image %}
@@ -359,17 +404,40 @@
         </div>
         <!-- /Аккордеон -->
 
+        <!-- Кнопка "Вернуться обратно" -->
+        <div class="text-center back-button">
+            <a href="{% url 'tour_list' %}" class="btn btn-secondary">Вернуться обратно</a>
+        </div>
+
     </div> <!-- /container -->
 
     <!-- Bootstrap JS (содержит Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Скрипт: клик по «шагу» -> открыть нужный день в аккордеоне -->
+    <!-- Скрипт: клик по «шагу» -> открыть нужный день в аккордеоне и обновить прогресс-линию -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       var stepItems = document.querySelectorAll('.step-item');
-      
-      stepItems.forEach(function(item) {
+      var progressSteps = document.getElementById('progressSteps');
+      var totalSteps = stepItems.length;
+
+      // Функция для установки прогресса
+      function setProgress(index) {
+          var progressPercent = 0;
+          if (totalSteps > 0) {
+              progressPercent = ((index + 1) / totalSteps) * 100;
+          }
+          progressSteps.style.setProperty('--progress-percent', progressPercent + '%');
+      }
+
+      // Инициализация прогресса на основе активного шага при загрузке страницы
+      stepItems.forEach(function(item, index) {
+          if (item.querySelector('.step-circle').classList.contains('active')) {
+              setProgress(index);
+          }
+      });
+
+      stepItems.forEach(function(item, index) {
         item.addEventListener('click', function() {
           var target = this.getAttribute('data-target');
           if (!target) return;
@@ -382,11 +450,22 @@
           });
           collapseEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-          // Убираем класс .active со всех кружков и добавляем на текущий
-          stepItems.forEach(function(si) {
+          // Удаляем классы 'active' и 'completed' со всех step-items
+          stepItems.forEach(function(si, siIndex) {
             si.querySelector('.step-circle').classList.remove('active');
+            si.querySelector('.step-circle').classList.remove('completed');
           });
+
+          // Добавляем 'active' классу текущего step-item
           this.querySelector('.step-circle').classList.add('active');
+
+          // Добавляем 'completed' класс всем step-items до и включая текущий
+          for (var i = 0; i <= index; i++) {
+            stepItems[i].querySelector('.step-circle').classList.add('completed');
+          }
+
+          // Устанавливаем прогресс
+          setProgress(index);
         });
       });
     });

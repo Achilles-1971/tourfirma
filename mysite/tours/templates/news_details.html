@@ -7,51 +7,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ news.title }} - Подробности</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
+        /* Ваши стили здесь */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            color: #333;
-        }
-
-        .news-header {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('{{ news.image.url }}') no-repeat center center/cover;
-            color: white;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
-            padding: 100px 20px;
-            text-align: center;
-            animation: fadeIn 1.5s ease;
-        }
-
-        .news-header h1 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .news-header p {
-            font-size: 1.2rem;
-        }
-
-        .news-content {
-            margin-top: 30px;
-            font-size: 1.1rem;
         }
 
         .btn-back {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
+            margin: 40px auto;
+            padding: 12px 30px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
             border-radius: 30px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0, 123, 255, 0.3);
         }
 
         .btn-back:hover {
             background-color: #0056b3;
             transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 123, 255, 0.4);
+        }
+
+        .carousel-inner img {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            max-width: 80%;
+            margin: 0 auto;
+            animation: fadeInCaption 1s ease-in-out;
+        }
+
+        @keyframes fadeInCaption {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery-intro {
+            font-size: 1.1rem;
+            color: #555;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .comments-section {
+            margin-top: 50px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .comments-section .comment {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .related-news .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .related-news .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
         .footer {
@@ -60,37 +103,40 @@
             padding: 20px;
             margin-top: 40px;
             color: #666;
-            border-top: 1px solid #ddd;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
+        @media (max-width: 768px) {
+            .news-header {
+                padding: 60px 20px;
             }
-            to {
-                opacity: 1;
-            }
-        }
 
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: bold;
+            .news-header h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-intro {
+                font-size: 1rem;
+            }
+
+            .carousel-inner img {
+                height: 250px;
+            }
         }
     </style>
 </head>
 
 <body>
-
+    <!-- Верхняя панель -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-                <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px; width: auto;">
-                <span class="ms-2">Туроператор</span>
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Логотип" style="height: 40px;">
+                Туроператор
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -103,70 +149,162 @@
             </div>
         </div>
     </nav>
+    <!-- /Навбар -->
 
-    <header class="news-header">
-        <div class="container">
-            <h1>{{ news.title }}</h1>
-            <p>Опубликовано {{ news.created_at|date:"d.m.Y H:i" }}</p>
+    <header class="news-header" style="background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('{{ news.image.url }}') no-repeat center center / cover; color: #fff;">
+        <div class="container py-5 text-center">
+            <h1 class="display-4 fw-bold">{{ news.title }}</h1>
+            <p class="lead">Опубликовано {{ news.created_at|date:"d.m.Y H:i" }}</p>
         </div>
     </header>
 
-    <div class="container">
+    <div class="gallery-wrapper">
+        <h3 class="mt-5 text-center">Галерея</h3>
+        <p class="gallery-intro text-center">Посмотрите фотографии, связанные с этой новостью!</p>
+        {% if news.gallery.exists %}
+        <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <!-- Навигационные индикаторы -->
+            <div class="carousel-indicators">
+                {% for image in news.gallery.all %}
+                    <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+            
+            <!-- Слайды -->
+            <div class="carousel-inner">
+                {% for image in news.gallery.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption }}">
+                    {% if image.caption %}
+                    <div class="carousel-caption d-none d-md-block">
+                        <p>{{ image.caption }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Кнопки переключения -->
+            {% if news.gallery.all|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий</span>
+            </button>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="text-center">Нет фотографий для этой новости.</p>
+        {% endif %}
+    </div>
+    
+
+    <div class="container mt-5">
         <div class="news-content">
-            <p>{{ news.content }}</p>
+            <h2 class="mb-4" style="font-size: 1.8rem; font-weight: bold;">Ключевые моменты</h2>
+            <p style="line-height: 1.8;">
+                {{ news.content|linebreaks }}
+            </p>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="info-box p-3 mb-3" style="background: #f8f9fa; border-left: 4px solid #007bff; border-radius: 6px;">
+                        <h4 style="font-size: 1.2rem; font-weight: bold;">Важный факт</h4>
+                        <p style="margin: 0;">{{ news.important_fact|default:"Нет важного факта для этой новости." }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-box p-3 mb-3" style="background: #f8f9fa; border-left: 4px solid #28a745; border-radius: 6px;">
+                        <h4 style="font-size: 1.2rem; font-weight: bold;">Интересный факт</h4>
+                        <p style="margin: 0;">{{ news.interesting_fact|default:"Нет интересного факта для этой новости." }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вставка цитаты -->
+            <blockquote class="blockquote mt-4 p-3" style="background: #f1f3f5; border-left: 4px solid #6c757d; font-size: 1.1rem; border-radius: 6px;">
+                <p class="mb-0" style="font-style: italic;">{{ news.source|default:"Источник информации не указан." }}</p>
+                <footer class="blockquote-footer text-end mt-2"><cite title="Source Title"></cite></footer>
+            </blockquote>
+
+        
+        </div>
+    </div>
+
+
+        <!-- Кнопка "Вернуться обратно" -->
+        <div class="text-center">
+            <a href="{% url 'home' %}" class="btn-back">Вернуться на главную</a>
         </div>
 
-        <!-- Комментарии -->
-        <div class="mt-5">
+        <!-- Блок комментариев -->
+        <div class="comments-section mt-5">
             <h3>Комментарии</h3>
-            <div class="mb-4">
-                {% if user.is_authenticated %}
-                <form action="{% url 'add_comment' news.id %}" method="post">
-                    {% csrf_token %}
-                    <textarea name="comment" class="form-control mb-2" rows="3" placeholder="Оставьте комментарий"></textarea>
-                    <button type="submit" class="btn btn-primary">Отправить</button>
-                </form>
-                {% else %}
-                <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
-                {% endif %}
-            </div>
-            <div>
+            {% if user.is_authenticated %}
+            <form action="{% url 'add_comment' news.id %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <textarea name="comment" class="form-control" rows="3" placeholder="Оставьте комментарий" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+            {% else %}
+            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+            {% endif %}
+
+            <div class="mt-4">
                 {% for comment in news.comments.all %}
-                <div class="border p-3 mb-3">
-                    <strong>{{ comment.user.username }}</strong>
+                <div class="comment">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>{{ comment.user.username }}</strong>
+                        {% if user == comment.user or user.is_staff %}
+                        <form action="{% url 'delete_comment' comment.id %}" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить этот комментарий?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Удалить
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
                     <p>{{ comment.text }}</p>
                     <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
                 </div>
+                {% empty %}
+                <p>Нет комментариев для этой новости.</p>
                 {% endfor %}
             </div>
         </div>
 
         <!-- Связанные новости -->
-        <h2 class="mt-5">Связанные новости</h2>
-        <div class="row">
-            {% for related_news in news.get_related_news %}
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <img src="{{ related_news.image.url }}" class="card-img-top" alt="{{ related_news.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ related_news.title }}</h5>
-                        <p class="card-text">{{ related_news.description|truncatewords:20 }}</p>
-                        <a href="{% url 'news_detail' related_news.id %}" class="btn btn-primary">Читать</a>
+        <div class="related-news mt-5">
+            <h3>Связанные новости</h3>
+            <div class="row">
+                {% for related in related_news %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ related.image.url }}" class="card-img-top" alt="{{ related.title }}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ related.title }}</h5>
+                            <p class="card-text">{{ related.description|truncatewords:20 }}</p>
+                            <a href="{% url 'news_detail' related.id %}" class="btn btn-primary mt-auto">Подробнее</a>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-
-        <div class="text-center">
-            <a href="{% url 'home' %}" class="btn-back">Вернуться на главную</a>
         </div>
     </div>
+    <!-- /Контент -->
 
+    <!-- Футер -->
     <footer class="footer">
         <p>&copy; 2025 Туроператор. Все права защищены.</p>
         <p>Email: info@touroperator.com | Телефон: +7 123 456 78 90</p>
     </footer>
+    <!-- /Футер -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
